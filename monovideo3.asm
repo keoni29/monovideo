@@ -94,7 +94,8 @@ initSpi		ldx		PCADDR,#DDR					; MOSI pin is output
 initGPIO	ldx		PCADDR,#AF					; T1OUT alternate function enable
 			orx		PCCTL,#(1<<1)			
 			
-startVideo	ld		isrVectH,#HIGH(sync)
+startVideo	ld		state,#LOW(preEq)			; Set state to preEq		
+			ld		isrVectH,#HIGH(sync)
 			ld		isrVectL,#LOW(sync)
 			orx		T0CTL1,#(1<<7)				; T0 enabled	
 			ei									; Enable interrupts
@@ -134,6 +135,8 @@ fetchTile	ld		vBuffL,#00h					; Load white pixels in video buffer
 postEq		djnz	hCharCnt,postEqEnd
 			djnz	vLineCnt,$F
 			ld		state,#LOW(vSync)			; Set state to visible display
+			ldx		T1RH,#HIGH(t1BroadSync)		; Set T1 interval for broad sync pulse
+			ldx		T1RL,#LOW(t1BroadSync)
 $$			ld		hCharCnt,#hCharsTotal/2
 			ld		isrVectH,#HIGH(sync)
 			ld		isrVectL,#LOW(sync)
@@ -141,7 +144,9 @@ postEqEnd	iret
 ; Broad sync pulses
 vSync		djnz	hCharCnt,vSyncEnd
 			djnz	vLineCnt,$F
-			ld		state,#LOW(fetch)			; Set state to visible display
+			ld		state,#LOW(preEq)			; Set state to preEq
+			ldx		T1RH,#HIGH(t1hSync)			; Set T1 interval for short sync pulse
+			ldx		T1RL,#LOW(t1hSync)
 $$			ld		hCharCnt,#hCharsTotal/2
 			ld		isrVectH,#HIGH(sync)
 			ld		isrVectL,#LOW(sync)

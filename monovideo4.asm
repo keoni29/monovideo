@@ -4,7 +4,7 @@
 include "ez8.inc"
 
 ; Setup video generator
-		sysFreq		equ		20_000_000
+		sysFreq		equ		20_000_000 
 		rFreq		equ		50
 
 		hChars		equ		23			; Character columns

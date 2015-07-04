@@ -201,26 +201,27 @@
 <!-- watch information -->
 <watch-elements>
 <watch-element expression="charSet" />
+<watch-element expression="t0Interval" />
 </watch-elements>
 
 <!-- breakpoint information -->
 <breakpoints>
 <breakpoint temporary="false" enabled="false" >
-<line-number>167</line-number>
+<line-number>140</line-number>
 <pathname>C:\users\koen\My Documents\src\ez8\monovideo-git\monovideo4.asm</pathname>
 <address>857</address>
 <command></command>
 <preserve-type>0</preserve-type>
 </breakpoint>
 <breakpoint temporary="false" enabled="false" >
-<line-number>140</line-number>
+<line-number>147</line-number>
 <pathname>C:\users\koen\My Documents\src\ez8\monovideo-git\monovideo4.asm</pathname>
 <address>798</address>
 <command></command>
 <preserve-type>0</preserve-type>
 </breakpoint>
 <breakpoint temporary="false" enabled="false" >
-<line-number>147</line-number>
+<line-number>167</line-number>
 <pathname>C:\users\koen\My Documents\src\ez8\monovideo-git\monovideo4.asm</pathname>
 <address>808</address>
 <command></command>
@@ -230,6 +231,13 @@
 <line-number>188</line-number>
 <pathname>C:\users\koen\My Documents\src\ez8\monovideo-git\monovideo4.asm</pathname>
 <address>885</address>
+<command></command>
+<preserve-type>0</preserve-type>
+</breakpoint>
+<breakpoint temporary="false" enabled="true" >
+<line-number>75</line-number>
+<pathname>C:\users\koen\My Documents\src\ez8\monovideo-git\monovideo4.asm</pathname>
+<address>525</address>
 <command></command>
 <preserve-type>0</preserve-type>
 </breakpoint>

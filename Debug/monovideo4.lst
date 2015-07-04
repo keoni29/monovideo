@@ -1,4 +1,4 @@
-Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   1
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -16,10 +16,10 @@ PC     Object              I  Line    Source
                            B   957    
                            A     5    
                            A     6    ; Setup video generator
-     01312D00              A     7    		sysFreq		equ		20_000_000 
+     017D7840              A     7    		sysFreq		equ		25_000_000;20_000_0
      00000032              A     8    		rFreq		equ		50
                            A     9    
-     00000015              A    10    		hChars		equ		21			; Chara
+     0000001B              A    10    		hChars		equ		27			; Chara
      0000001E              A    11    		vChars		equ		30			; Chara
      00000002              A    12    		hBorderL	equ		2			; Left 
      00000002              A    13    		hBorderR	equ		2			; Right
@@ -29,7 +29,7 @@ PC     Object              I  Line    Source
      00000003              A    17    		spiPre		equ	3
                            A    18    
                            A    19    ; Calculate timing parameters
-     00000016              A    20    		hCharsTotal equ	hChars + 1;3 ;+ hBorder
+     0000001C              A    20    		hCharsTotal equ	hChars + 1;3 ;+ hBorder
                            A    21    		if (hCharsTotal / 2) * 2 < hCharsTotal
                            A    22    			error "Horizontal characters must b
                            A    23    		endif
@@ -52,13 +52,13 @@ PC     Object              I  Line    Source
                            A    40    			error	"Unknown frequency"
                            A    41    		endif
                            A    42    
-     0000003A              A    43    		t0Interval		var		hTime * sysFreq
-     00000050              A    44    		t1hSync			equ		hSyncTime * sys
-Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   2
+     00000039              A    43    		t0Interval		var		hTime * sysFreq
+     00000064              A    44    		t1hSync			equ		hSyncTime * sys
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   2
 
 
 PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
-     0000022E              A    45    		t1BroadSync		equ		(t0Interval * (
+     000002BA              A    45    		t1BroadSync		equ		(t0Interval * (
                            A    46    
                            A    47    		if t0Interval < (cWidth + 1) * spiPre *
                            A    48    			error "Horizontal character count t
@@ -78,134 +78,135 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
                            A    62    		vLineCnt	equ		R13
                            A    63    		state		equ		R9
                            A    64    		
-     00000200              A    65    		screenBuff	equ		200h
-                           A    66    
-0002 0200                  A    67    vector	RESET = init
-000C 0296                  A    68    vector timer0 = isrT0
-                           A    69    org 0200h
-0200 8F                    A    70    init		di									0201 0100                  A    71    			srp		#00h						0203 E9000FFE              A    72    			ldx		SPH,#00h					0207 E9FF0FFF              A    73    			ldx		SPL,#FFh
-020B 6C02                  A    74    			ld		R6,#2
-020D D6 027D               A    75    			call	clrBuff						                           A    76    			
-0210 E9010FD8              A    77    initSpi		ldx		PCADDR,#DDR					0214 E9EF0FD9              A    78    			ldx		PCCTL,#~(1<<4)
-0218 E9020FD8              A    79    			ldx		PCADDR,#AF					021C E9100FD9              A    80    			ldx		PCCTL,#(1<<4)				0220 E9030F61              A    81    			ldx		SPICTL,#(1<<1)|(1<<0)		0224 E91C0F63              A    82    			ldx		SPIMODE,#((cWidth & 7) << 2
-0228 E9000F66              A    83    			ldx		SPIBRH,#HIGH(spiPre)		022C E9030F67              A    84    			ldx		SPIBRL,#LOW(spiPre)
-                           A    85    
-0230 E9000F07              A    86    			ldx		T0CTL1,#0					0234 E9000F06              A    87    			ldx		T0CTL0,#0					0238 E9000F02              A    88    			ldx		T0RH,#HIGH(t0Interval)		023C E93A0F03              A    89    			ldx		T0RL,#LOW(t0Interval)		0240 E9010F07              A    90    			ldx		T0CTL1,#(1<<0)				0244 E9200FC1              A    91    			ldx		IRQ0ENH,#(1<<5)				0248 E9200FC2              A    92    			ldx		IRQ0ENL,#(1<<5)
-                           A    93    			
-024C E9000F0F              A    94    			ldx		T1CTL1,#0					0250 E9000F0E              A    95    			ldx		T1CTL0,#0					0254 E9000F0A              A    96    			ldx		T1RH,#HIGH(t1hSync)			Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   3
+                           A    65    		
+     00000200              A    66    		screenBuff	equ		200h
+                           A    67    
+0002 0200                  A    68    vector	RESET = init
+000C 0296                  A    69    vector timer0 = isrT0
+                           A    70    org 0200h
+0200 8F                    A    71    init		di									0201 0100                  A    72    			srp		#00h						0203 E9000FFE              A    73    			ldx		SPH,#00h					0207 E9FF0FFF              A    74    			ldx		SPL,#FFh
+020B 6C02                  A    75    			ld		R6,#2
+020D D6 027D               A    76    			call	clrBuff						                           A    77    			
+0210 E9010FD8              A    78    initSpi		ldx		PCADDR,#DDR					0214 E9EF0FD9              A    79    			ldx		PCCTL,#~(1<<4)
+0218 E9020FD8              A    80    			ldx		PCADDR,#AF					021C E9100FD9              A    81    			ldx		PCCTL,#(1<<4)				0220 E9030F61              A    82    			ldx		SPICTL,#(1<<1)|(1<<0)		0224 E91C0F63              A    83    			ldx		SPIMODE,#((cWidth & 7) << 2
+0228 E9000F66              A    84    			ldx		SPIBRH,#HIGH(spiPre)		022C E9030F67              A    85    			ldx		SPIBRL,#LOW(spiPre)
+                           A    86    
+0230 E9000F07              A    87    			ldx		T0CTL1,#0					0234 E9000F06              A    88    			ldx		T0CTL0,#0					0238 E9000F02              A    89    			ldx		T0RH,#HIGH(t0Interval)		023C E9390F03              A    90    			ldx		T0RL,#LOW(t0Interval)		0240 E9010F07              A    91    			ldx		T0CTL1,#(1<<0)				0244 E9200FC1              A    92    			ldx		IRQ0ENH,#(1<<5)				0248 E9200FC2              A    93    			ldx		IRQ0ENL,#(1<<5)
+                           A    94    			
+024C E9000F0F              A    95    			ldx		T1CTL1,#0					0250 E9000F0E              A    96    			ldx		T1CTL0,#0					Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   3
 
 
 PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
-0258 E9500F0B              A    97    			ldx		T1RL,#LOW(t1hSync)
-025C E9400F0F              A    98    			ldx		T1CTL1,#(1<<6)				                           A    99    
-0260 E9020FD8              A   100    initGPIO	ldx		PCADDR,#AF					0264 49020FD9              A   101    			orx		PCCTL,#(1<<1)			
-                           A   102    			
-0268 4CC0                  A   103    startVideo	ld		R4,#C0h
-026A 5C0D                  A   104    			ld		R5,#0Dh
-026C 9C 12                 A   105    			ld		state,#LOW(preEq)			026E CC0A                  A   106    			ld		hCharCnt,#hChars/2
-0270 DC06                  A   107    			ld		vLineCnt,#vSyncHLines + vSy
-0272 EC 03                 A   108    			ld		isrVectH,#HIGH(sync)
-0274 FC 00                 A   109    			ld		isrVectL,#LOW(sync)
-0276 49800F07              A   110    			orx		T0CTL1,#(1<<7)				027A 9F                    A   111    			ei									                           A   112    			
-027B                       A   113    $$			; Do stuff
-027B 8B FE                 A   114    			jr		$B
-                           A   115    
-027D 0C02                  A   116    clrBuff		ld		R0,#HIGH(screenBuff)
-027F 1C00                  A   117    			ld		R1,#LOW(screenBuff)
-0281 E4E1E2                A   118    $$			ld		R2,R1
-0284 56E23F                A   119    			and		R2,#63
-0287 96E2E0                A   120    			ldx		@RR0,R2
-028A A0E0                  A   121    			incw	RR0
-028C A6E176                A   122    			cp		R1,#LOW(screenBuff+hChars*v
-028F 1FA6E004              A   123    			cpc		R0,#HIGH(screenBuff+hChars*
-0293 EB EC                 A   124    			jr		ne,$B
-0295 AF                    A   125    			ret
-                           A   126    
-0296 C4EE                  A   127    isrT0		jp		@isrVect
-                           A   128    
-                           A   129    align 256
-0300 59BF0F0F              A   130    sync		andx	T1CTL1,#~(1<<6)				0304 49800F0F              A   131    			orx		T1CTL1,#(1<<7)				0308 49400F0F              A   132    			orx		T1CTL1,#(1<<6)
-030C E4E9EF                A   133    			ld		isrVectL,state
-030F BCFF                  A   134    			ld		vBuffL,#FFh					0311 BF                    A   135    			iret
-                           A   136    ; Pre-equalizing pulses
-0312 CA 10                 A   137    preEq		djnz	hCharCnt,preEqEnd
-0314 DA 0A                 A   138    			djnz	vLineCnt,$F
-0316 9C 25                 A   139    			ld		state,#LOW(vertPad)			0318 E4E5ED                A   140    			ld		vLineCnt,R5
-031B CC15                  A   141    			ld		hCharCnt,#hChars
-031D FC 00                 A   142    			ld		isrVectL,#LOW(sync)
-031F BF                    A   143    			iret
-0320 CC0A                  A   144    $$			ld		hCharCnt,#hChars/2
-0322 FC 00                 A   145    			ld		isrVectL,#LOW(sync)
-0324 BF                    A   146    preEqEnd	iret
-                           A   147    
-                           A   148    ; Vertical padding
-Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   4
+0254 E9000F0A              A    97    			ldx		T1RH,#HIGH(t1hSync)			0258 E9640F0B              A    98    			ldx		T1RL,#LOW(t1hSync)
+025C E9400F0F              A    99    			ldx		T1CTL1,#(1<<6)				                           A   100    
+0260 E9020FD8              A   101    initGPIO	ldx		PCADDR,#AF					0264 49020FD9              A   102    			orx		PCCTL,#(1<<1)			
+                           A   103    			
+0268 4CF0                  A   104    startVideo	ld		R4,#F0h
+026A 5C0F                  A   105    			ld		R5,#0Fh
+026C 9C 12                 A   106    			ld		state,#LOW(preEq)			026E CC0D                  A   107    			ld		hCharCnt,#hChars/2
+0270 DC06                  A   108    			ld		vLineCnt,#vSyncHLines + vSy
+0272 EC 03                 A   109    			ld		isrVectH,#HIGH(sync)
+0274 FC 00                 A   110    			ld		isrVectL,#LOW(sync)
+0276 49800F07              A   111    			orx		T0CTL1,#(1<<7)				027A 9F                    A   112    			ei									                           A   113    			
+027B                       A   114    $$			; Do stuff
+027B 8B FE                 A   115    			jr		$B
+                           A   116    
+027D 0C02                  A   117    clrBuff		ld		R0,#HIGH(screenBuff)
+027F 1C00                  A   118    			ld		R1,#LOW(screenBuff)
+0281 E4E1E2                A   119    $$			ld		R2,R1
+0284 56E23F                A   120    			and		R2,#63
+0287 96E2E0                A   121    			ldx		@RR0,R2
+028A A0E0                  A   122    			incw	RR0
+028C A6E12A                A   123    			cp		R1,#LOW(screenBuff+hChars*v
+028F 1FA6E005              A   124    			cpc		R0,#HIGH(screenBuff+hChars*
+0293 EB EC                 A   125    			jr		ne,$B
+0295 AF                    A   126    			ret
+                           A   127    
+0296 C4EE                  A   128    isrT0		jp		@isrVect
+                           A   129    
+                           A   130    align 256
+0300 59BF0F0F              A   131    sync		andx	T1CTL1,#~(1<<6)				0304 49800F0F              A   132    			orx		T1CTL1,#(1<<7)				0308 49400F0F              A   133    			orx		T1CTL1,#(1<<6)
+030C E4E9EF                A   134    			ld		isrVectL,state
+030F BCFF                  A   135    			ld		vBuffL,#FFh					0311 BF                    A   136    			iret
+                           A   137    ; Pre-equalizing pulses
+0312 CA 10                 A   138    preEq		djnz	hCharCnt,preEqEnd
+0314 DA 0A                 A   139    			djnz	vLineCnt,$F
+0316 9C 25                 A   140    			ld		state,#LOW(vertPad)			0318 E4E5ED                A   141    			ld		vLineCnt,R5
+031B CC1B                  A   142    			ld		hCharCnt,#hChars
+031D FC 00                 A   143    			ld		isrVectL,#LOW(sync)
+031F BF                    A   144    			iret
+0320 CC0D                  A   145    $$			ld		hCharCnt,#hChars/2
+0322 FC 00                 A   146    			ld		isrVectL,#LOW(sync)
+0324 BF                    A   147    preEqEnd	iret
+                           A   148    
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   4
 
 
 PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
-0325 CA 14                 A   149    vertPad		djnz	hCharCnt,vertPadEnd
-0327 DA 0E                 A   150    			djnz	vLineCnt,$F
-0329 9C 3C                 A   151    			ld		state,#LOW(fetch)			032B E4E4ED                A   152    			ld		vLineCnt,R4
-032E CC15                  A   153    			ld		hCharCnt,#hChars
-0330 FC 00                 A   154    			ld		isrVectL,#LOW(sync)
-0332 2C02                  A   155    			ld		R2,#HIGH(screenBuff)		0334 3C00                  A   156    			ld		R3,#LOW(screenBuff)
-0336 BF                    A   157    			iret
-0337 CC0A                  A   158    $$			ld		hCharCnt,#hChars/2
-0339 FC 00                 A   159    			ld		isrVectL,#LOW(sync)
-033B BF                    A   160    vertPadEnd	iret
-                           A   161    
-                           A   162    ; Visible display
-033C 94BF60                A   163    fetch		ldx		SPIDATA,vBuffL
-033F CA 26                 A   164    			djnz	hCharCnt,fetchTile			0341 26E315                A   165    			sub		R3,#hChars					0344 36E200                A   166    			sbc		R2,#0
-0347 DA 0A                 A   167    			djnz	vLineCnt,$F					0349 9C 7A                 A   168    			ld		state,#LOW(vertPad2)		034B E4E5ED                A   169    			ld		vLineCnt,R5
-034E CC15                  A   170    			ld		hCharCnt,#hChars
-0350 FC 00                 A   171    			ld		isrVectL,#LOW(sync)
-0352 BF                    A   172    			iret
-0353 E4EDE0                A   173    $$			ld		R0,vLineCnt
-0356 E0E0                  A   174    			rr		R0
-0358 56E007                A   175    			and		R0,#07h
-035B EB 06                 A   176    			jr		ne,$F						035D 06E315                A   177    			add		R3,#hChars					0360 16E200                A   178    			adc		R2,#0
-0363 CC15                  A   179    $$			ld		hCharCnt,#hChars
-0365 FC 00                 A   180    			ld		isrVectL,#LOW(sync)
-0367 E4EDE0                A   181    fetchTile	ld		R0,vLineCnt
-036A E0E0                  A   182    			rr		R0
-036C 56E007                A   183    			and		R0,#07h						036F 46E0 10               A   184    			or		R0,#HIGH(charSet)			0372 86E2E1                A   185    			ldx		R1,@RR2						0375 A0E2                  A   186    			incw	RR2							0377 C2B0                  A   187    			ldc		vBuffL,@RR0					                           A   188    			;ld		vBuffL,vLineCnt
-0379 BF                    A   189    			iret
-                           A   190    			
-                           A   191    ; Vertical padding bottom
-037A CA 0F                 A   192    vertPad2	djnz	hCharCnt,vertPad2End
-037C DA 09                 A   193    			djnz	vLineCnt,$F
-037E 9C 8C                 A   194    			ld		state,#LOW(postEq)			0380 DC05                  A   195    			ld		vLineCnt,#vSyncHLines
-0382 CC0A                  A   196    			ld		hCharCnt,#hChars/2
-0384 FC 00                 A   197    			ld		isrVectL,#LOW(sync)
-0386 BF                    A   198    			iret
-0387 CC0A                  A   199    $$			ld		hCharCnt,#hChars/2
-0389 FC 00                 A   200    			ld		isrVectL,#LOW(sync)
-Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   5
+                           A   149    ; Vertical padding
+0325 CA 14                 A   150    vertPad		djnz	hCharCnt,vertPadEnd
+0327 DA 0E                 A   151    			djnz	vLineCnt,$F
+0329 9C 3C                 A   152    			ld		state,#LOW(fetch)			032B E4E4ED                A   153    			ld		vLineCnt,R4
+032E CC1B                  A   154    			ld		hCharCnt,#hChars
+0330 FC 00                 A   155    			ld		isrVectL,#LOW(sync)
+0332 2C02                  A   156    			ld		R2,#HIGH(screenBuff)		0334 3C00                  A   157    			ld		R3,#LOW(screenBuff)
+0336 BF                    A   158    			iret
+0337 CC0D                  A   159    $$			ld		hCharCnt,#hChars/2
+0339 FC 00                 A   160    			ld		isrVectL,#LOW(sync)
+033B BF                    A   161    vertPadEnd	iret
+                           A   162    
+                           A   163    ; Visible display
+033C 94BF60                A   164    fetch		ldx		SPIDATA,vBuffL
+033F CA 26                 A   165    			djnz	hCharCnt,fetchTile			0341 26E31B                A   166    			sub		R3,#hChars					0344 36E200                A   167    			sbc		R2,#0
+0347 DA 0A                 A   168    			djnz	vLineCnt,$F					0349 9C 7A                 A   169    			ld		state,#LOW(vertPad2)		034B E4E5ED                A   170    			ld		vLineCnt,R5
+034E CC1B                  A   171    			ld		hCharCnt,#hChars
+0350 FC 00                 A   172    			ld		isrVectL,#LOW(sync)
+0352 BF                    A   173    			iret
+0353 E4EDE0                A   174    $$			ld		R0,vLineCnt
+0356 E0E0                  A   175    			rr		R0
+0358 56E007                A   176    			and		R0,#07h
+035B EB 06                 A   177    			jr		ne,$F						035D 06E31B                A   178    			add		R3,#hChars					0360 16E200                A   179    			adc		R2,#0
+0363 CC1B                  A   180    $$			ld		hCharCnt,#hChars
+0365 FC 00                 A   181    			ld		isrVectL,#LOW(sync)
+0367 E4EDE0                A   182    fetchTile	ld		R0,vLineCnt
+036A E0E0                  A   183    			rr		R0
+036C 56E007                A   184    			and		R0,#07h						036F 46E0 10               A   185    			or		R0,#HIGH(charSet)			0372 86E2E1                A   186    			ldx		R1,@RR2						0375 A0E2                  A   187    			incw	RR2							0377 C2B0                  A   188    			ldc		vBuffL,@RR0					                           A   189    			;ld		vBuffL,vLineCnt
+0379 BF                    A   190    			iret
+                           A   191    			
+                           A   192    ; Vertical padding bottom
+037A CA 0F                 A   193    vertPad2	djnz	hCharCnt,vertPad2End
+037C DA 09                 A   194    			djnz	vLineCnt,$F
+037E 9C 8C                 A   195    			ld		state,#LOW(postEq)			0380 DC05                  A   196    			ld		vLineCnt,#vSyncHLines
+0382 CC0D                  A   197    			ld		hCharCnt,#hChars/2
+0384 FC 00                 A   198    			ld		isrVectL,#LOW(sync)
+0386 BF                    A   199    			iret
+0387 CC0D                  A   200    $$			ld		hCharCnt,#hChars/2
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   5
 
 
 PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
-038B BF                    A   201    vertPad2End	iret
-                           A   202    
-                           A   203    ; Post-equalizing pulses
-038C CA 12                 A   204    postEq		djnz	hCharCnt,postEqEnd
-038E DA 0C                 A   205    			djnz	vLineCnt,$F
-0390 9C A1                 A   206    			ld		state,#LOW(vSync)			0392 DC05                  A   207    			ld		vLineCnt,#vSyncHLines
-0394 E9020F0A              A   208    			ldx		T1RH,#HIGH(t1BroadSync)		0398 E92E0F0B              A   209    			ldx		T1RL,#LOW(t1BroadSync)
-039C CC0A                  A   210    $$			ld		hCharCnt,#hChars/2
-039E FC 00                 A   211    			ld		isrVectL,#LOW(sync)
-03A0 BF                    A   212    postEqEnd	iret
-                           A   213    ; Broad sync pulses
-03A1 CA 12                 A   214    vSync		djnz	hCharCnt,vSyncEnd
-03A3 DA 0C                 A   215    			djnz	vLineCnt,$F
-03A5 9C 12                 A   216    			ld		state,#LOW(preEq)			03A7 DC06                  A   217    			ld		vLineCnt,#vSyncHLines + vSy
-03A9 E9000F0A              A   218    			ldx		T1RH,#HIGH(t1hSync)			03AD E9500F0B              A   219    			ldx		T1RL,#LOW(t1hSync)
-03B1 CC0A                  A   220    $$			ld		hCharCnt,#hChars/2
-03B3 FC 00                 A   221    			ld		isrVectL,#LOW(sync)
-03B5 BF                    A   222    vSyncEnd	iret
-                           A   223    
+0389 FC 00                 A   201    			ld		isrVectL,#LOW(sync)
+038B BF                    A   202    vertPad2End	iret
+                           A   203    
+                           A   204    ; Post-equalizing pulses
+038C CA 12                 A   205    postEq		djnz	hCharCnt,postEqEnd
+038E DA 0C                 A   206    			djnz	vLineCnt,$F
+0390 9C A1                 A   207    			ld		state,#LOW(vSync)			0392 DC05                  A   208    			ld		vLineCnt,#vSyncHLines
+0394 E9020F0A              A   209    			ldx		T1RH,#HIGH(t1BroadSync)		0398 E9BA0F0B              A   210    			ldx		T1RL,#LOW(t1BroadSync)
+039C CC0D                  A   211    $$			ld		hCharCnt,#hChars/2
+039E FC 00                 A   212    			ld		isrVectL,#LOW(sync)
+03A0 BF                    A   213    postEqEnd	iret
+                           A   214    ; Broad sync pulses
+03A1 CA 12                 A   215    vSync		djnz	hCharCnt,vSyncEnd
+03A3 DA 0C                 A   216    			djnz	vLineCnt,$F
+03A5 9C 12                 A   217    			ld		state,#LOW(preEq)			03A7 DC06                  A   218    			ld		vLineCnt,#vSyncHLines + vSy
+03A9 E9000F0A              A   219    			ldx		T1RH,#HIGH(t1hSync)			03AD E9640F0B              A   220    			ldx		T1RL,#LOW(t1hSync)
+03B1 CC0D                  A   221    $$			ld		hCharCnt,#hChars/2
+03B3 FC 00                 A   222    			ld		isrVectL,#LOW(sync)
+03B5 BF                    A   223    vSyncEnd	iret
                            A   224    
-                           A   225    org 1000h										1000                       A   226    charSet											1000 FFFFFFFF FFFFFFFF     A   227    		byte FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FF
+                           A   225    
+                           A   226    org 1000h										1000                       A   227    charSet											1000 FFFFFFFF FFFFFFFF     A   228    		byte FFh,FFh,FFh,FFh,FFh,FFh,FFh,FFh,FF
 1008 FFFFFFFF 9FFFFFFF 
 1010 FFFFFFFF FFFFFFFF 
 1018 FFFFFFFF FFFFFFFF 
@@ -213,8 +214,8 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1028 FFFFFFFF FFFFFFFF 
 1030 FFFFFFFF FFFFFFFF 
 1038 FFFFFFFF FFFFFFFF 
-                           A   228    org 1100h
-1100 FFE7FF93 CF7381FF     A   229    		byte FFh,E7h,FFh,93h,CFh,73h,81h,FFh,E7
+                           A   229    org 1100h
+1100 FFE7FF93 CF7381FF     A   230    		byte FFh,E7h,FFh,93h,CFh,73h,81h,FFh,E7
 1108 E7E7FFFF CFFFCF3F 
 1110 87030387 F38787CF 
 1118 8383FFCF E3FFC7CF 
@@ -222,21 +223,21 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1128 33878F33 03393387 
 1130 3FE33387 CF87CF39 
 1138 33CF0387 F9E1FF03 
-                           A   230    org 1200h
-1200 FFFFFF93 073333FF     A   231    		byte FFh,FFh,FFh,93h,07h,33h,33h,FFh,CF
+                           A   231    org 1200h
+1200 FFFFFF93 073333FF     A   232    		byte FFh,FFh,FFh,93h,07h,33h,33h,FFh,CF
 1208 CFF399E7 CFFFCF9F 
 1210 33CF9F33 F33333CF 
 1218 3939FFE7 CFFFF3FF 
 1220 3B333333 273F3F33 
 1228 33CF2727 3F393333 
 1230 3F872733 CF338711 
-1238 33CF3F9F F3F9FFFF 
-Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   6
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   6
 
 
 PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
-                           A   232    org 1300h
-1300 FFFFFF01 F39F31FF     A   233    		byte FFh,FFh,FFh,01h,F3h,9Fh,31h,FFh,9F
+1238 33CF3F9F F3F9FFFF 
+                           A   233    org 1300h
+1300 FFFFFF01 F39F31FF     A   234    		byte FFh,FFh,FFh,01h,F3h,9Fh,31h,FFh,9F
 1308 9FF9C3E7 FFFFFFCF 
 1310 33CFCFF3 01F333CF 
 1318 39F9E7E7 9F83F9CF 
@@ -244,8 +245,8 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1328 33CFE70F 3F392333 
 1330 3F330FF3 CF333301 
 1338 87CF9F9F E7F9FFFF 
-                           A   234    org 1400h
-1400 FFE7FF93 87CF8FFF     A   235    		byte FFh,E7h,FFh,93h,87h,CFh,8Fh,FFh,9F
+                           A   235    org 1400h
+1400 FFE7FF93 87CF8FFF     A   236    		byte FFh,E7h,FFh,93h,87h,CFh,8Fh,FFh,9F
 1408 9FF90081 FF83FFE7 
 1410 13CFE7C7 33F307CF 
 1418 8381FFFF 3FFFFCE7 
@@ -253,8 +254,8 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1428 03CFE71F 3F290333 
 1430 07330787 CF333329 
 1438 CF87CF9F CFF9BBFF 
-                           A   236    org 1500h
-1500 FFE79901 3FE787CF     A   237    		byte FFh,E7h,99h,01h,3Fh,E7h,87h,CFh,9F
+                           A   237    org 1500h
+1500 FFE79901 3FE787CF     A   238    		byte FFh,E7h,99h,01h,3Fh,E7h,87h,CFh,9F
 1508 9FF9C3E7 FFFFFFF3 
 1510 238FF3F3 C3073FE7 
 1518 3939FFFF 9F83F9F3 
@@ -262,8 +263,8 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1528 33CFE70F 3F010333 
 1530 3333333F CF333339 
 1538 8733E79F 9FF993FF 
-                           A   238    org 1600h
-1600 FFE79993 833333E7     A   239    		byte FFh,E7h,99h,93h,83h,33h,33h,E7h,CF
+                           A   239    org 1600h
+1600 FFE79993 833333E7     A   240    		byte FFh,E7h,99h,93h,83h,33h,33h,E7h,CF
 1608 CFF399E7 FFFFFFF9 
 1610 33CF3333 E33F3333 
 1618 3939E7E7 CFFFF333 
@@ -271,8 +272,8 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1628 33CFE727 3F111333 
 1630 33333333 CF333339 
 1638 3333F39F 3FF9C7FF 
-                           A   240    org 1700h
-1700 FFE79993 CF3B87F3     A   241    		byte FFh,E7h,99h,93h,CFh,3Bh,87h,F3h,E7
+                           A   241    org 1700h
+1700 FFE79993 CF3B87F3     A   242    		byte FFh,E7h,99h,93h,CFh,3Bh,87h,F3h,E7
 1708 E7E7FFFF FFFFFFFF 
 1710 87CF8787 F3038703 
 1718 8383FFFF E3FFC787 
@@ -280,11 +281,11 @@ PC     Object              I  Line    Source C:\users\koen\MY_D~D41\src\ez8\MONO
 1728 3387C333 3F393387 
 1730 07870787 03333339 
 1738 33330387 FFE1EFFF 
-                           A   242    
-                           A   243    if vSync - sync > 200
+                           A   243    
+                           A   244    if vSync - sync > 200
 -----WARNING (507) Unexpected relocatable boolean/relational operand(s)
-                           A   244    	warning "vSync label almost out of reach!"	                           A   245    endif											                           A   246    			
-Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     17:49:38     page:   7
+                           A   245    	warning "vSync label almost out of reach!"	                           A   246    endif											                           A   247    			
+Zilog eZ8 Encore! Macro Assembler Version 2.53 (14010603) 04-Jul-15     18:22:47     page:   7
 
 
 PC     Object              I  Line    Source 
@@ -292,4 +293,4 @@ PC     Object              I  Line    Source
 
 Errors: 0
 Warnings: 1
-Lines Assembled: 2356
+Lines Assembled: 2357

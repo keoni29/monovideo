@@ -4,10 +4,10 @@
 include "ez8.inc"
 
 ; Setup video generator
-		sysFreq		equ		20_000_000 
+		sysFreq		equ		25_000_000;20_000_000 
 		rFreq		equ		50
 
-		hChars		equ		21			; Character columns
+		hChars		equ		27			; Character columns
 		vChars		equ		30			; Character rows
 		hBorderL	equ		2			; Left horizontal border width
 		hBorderR	equ		2			; Right horizontal border width
@@ -62,6 +62,7 @@ include "ez8.inc"
 		vLineCnt	equ		R13
 		state		equ		R9
 		
+		
 		screenBuff	equ		200h
 
 vector	RESET = init
@@ -100,8 +101,8 @@ initSpi		ldx		PCADDR,#DDR					; MOSI pin is output
 initGPIO	ldx		PCADDR,#AF					; T1OUT alternate function enable
 			orx		PCCTL,#(1<<1)			
 			
-startVideo	ld		R4,#C0h
-			ld		R5,#0Dh
+startVideo	ld		R4,#F0h
+			ld		R5,#0Fh
 			ld		state,#LOW(preEq)			; Set state to preEq
 			ld		hCharCnt,#hChars/2
 			ld		vLineCnt,#vSyncHLines + vSyncPad

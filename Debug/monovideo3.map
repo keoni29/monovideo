@@ -4,7 +4,7 @@ Copyright (C) 1999-2008 Zilog, Inc. All Rights Reserved
 
 LINK MAP:
 
-DATE:      Sun May 03 22:14:21 2015
+DATE:      Sat Jul 04 15:18:17 2015
 PROCESSOR: assembler
 FILES:     .\monovideo4.obj
 
@@ -46,8 +46,8 @@ SPACE ALLOCATION:
 
 Space                     Base         Top      Size      Used    Unused
 ------------------ ----------- ----------- --------- --------- ---------
-ROM                     C:0002      C:0366    10000H      16BH     FE95H
-                                          (    65536       363     65173)
+ROM                     C:0002      C:1705    10000H      1D3H     FE2DH
+                                          (    65536       467     65069)
 
 
 SEGMENTS WITHIN SPACE:
@@ -55,18 +55,34 @@ SEGMENTS WITHIN SPACE:
 
 ROM                Type                Base        Top         Size
 ------------------ ------------------- ----------- ----------- ---------
-$$$org00000000     absolute data            C:0200      C:0366      167h
+$$$org00000000     absolute data            C:0200      C:039E      19fh
+$$$org00000001     absolute data            C:1000      C:1005        6h
+$$$org00000002     absolute data            C:1100      C:1105        6h
+$$$org00000003     absolute data            C:1200      C:1205        6h
+$$$org00000004     absolute data            C:1300      C:1305        6h
+$$$org00000005     absolute data            C:1400      C:1405        6h
+$$$org00000006     absolute data            C:1500      C:1505        6h
+$$$org00000007     absolute data            C:1600      C:1605        6h
+$$$org00000008     absolute data            C:1700      C:1705        6h
 __VECTORS_002      absolute data            C:0002      C:0003        2h
 __VECTORS_00C      absolute data            C:000C      C:000D        2h
 
 SEGMENTS WITHIN MODULES:
 ========================
 
-Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm (File: monovideo4.obj) Version: 1:0 05/03/2015 22:14:18
+Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm (File: monovideo4.obj) Version: 1:0 07/04/2015 15:18:17
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: $$$org00000000                      C:0200      C:0366      167h
+    Segment: $$$org00000000                      C:0200      C:039E      19fh
+    Segment: $$$org00000001                      C:1000      C:1005        6h
+    Segment: $$$org00000002                      C:1100      C:1105        6h
+    Segment: $$$org00000003                      C:1200      C:1205        6h
+    Segment: $$$org00000004                      C:1300      C:1305        6h
+    Segment: $$$org00000005                      C:1400      C:1405        6h
+    Segment: $$$org00000006                      C:1500      C:1505        6h
+    Segment: $$$org00000007                      C:1600      C:1605        6h
+    Segment: $$$org00000008                      C:1700      C:1705        6h
     Segment: __VECTORS_002                       C:0002      C:0003        2h
     Segment: __VECTORS_00C                       C:000C      C:000D        2h
 
@@ -101,8 +117,8 @@ _WRITE_NVDS_GET_STATUS            Defined     LINKER
 
 OUTPUT CHECKSUM
 ===============
-monovideo3.hex       5F5D
-monovideo3.lod       5F5D
+monovideo3.hex       A6EE
+monovideo3.lod       A6EE
 
 
 

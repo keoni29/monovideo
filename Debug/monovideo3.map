@@ -4,9 +4,10 @@ Copyright (C) 1999-2008 Zilog, Inc. All Rights Reserved
 
 LINK MAP:
 
-DATE:      Sat Jul 04 18:22:47 2015
+DATE:      Sat Jul 04 21:19:19 2015
 PROCESSOR: assembler
 FILES:     .\monovideo4.obj
+           .\charset.obj          
 
 
 COMMAND LIST:
@@ -37,7 +38,7 @@ define _WRITE_NVDS=$10B3
 define _READ_NVDS_GET_STATUS=$1000
 define _WRITE_NVDS_GET_STATUS=$10B3
 
-"C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\Debug\monovideo3"=  .\monovideo4.obj
+"C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\Debug\monovideo3"=  .\monovideo4.obj,  .\charset.obj
 WARNING (715) --> Module ".\monovideo4.obj" contains errors or warnings.
 
 
@@ -46,8 +47,8 @@ SPACE ALLOCATION:
 
 Space                     Base         Top      Size      Used    Unused
 ------------------ ----------- ----------- --------- --------- ---------
-ROM                     C:0002      C:173F    10000H      3BAH     FC46H
-                                          (    65536       954     64582)
+ROM                     C:0002      C:173F    10000H     1004H     EFFCH
+                                          (    65536      4100     61436)
 
 
 SEGMENTS WITHIN SPACE:
@@ -55,34 +56,39 @@ SEGMENTS WITHIN SPACE:
 
 ROM                Type                Base        Top         Size
 ------------------ ------------------- ----------- ----------- ---------
-$$$org00000000     absolute data            C:0200      C:03B5      1b6h
-$$$org00000001     absolute data            C:1000      C:103F       40h
-$$$org00000002     absolute data            C:1100      C:113F       40h
-$$$org00000003     absolute data            C:1200      C:123F       40h
-$$$org00000004     absolute data            C:1300      C:133F       40h
-$$$org00000005     absolute data            C:1400      C:143F       40h
-$$$org00000006     absolute data            C:1500      C:153F       40h
-$$$org00000007     absolute data            C:1600      C:163F       40h
-$$$org00000008     absolute data            C:1700      C:173F       40h
+$$$org00000000     absolute data            C:0200      C:103F      e40h
+$$$org00000001     absolute data            C:1100      C:113F       40h
+$$$org00000002     absolute data            C:1200      C:123F       40h
+$$$org00000003     absolute data            C:1300      C:133F       40h
+$$$org00000004     absolute data            C:1400      C:143F       40h
+$$$org00000005     absolute data            C:1500      C:153F       40h
+$$$org00000006     absolute data            C:1600      C:163F       40h
+$$$org00000007     absolute data            C:1700      C:173F       40h
 __VECTORS_002      absolute data            C:0002      C:0003        2h
 __VECTORS_00C      absolute data            C:000C      C:000D        2h
 
 SEGMENTS WITHIN MODULES:
 ========================
 
-Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm (File: monovideo4.obj) Version: 1:0 07/04/2015 18:22:47
+Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\charset.asm (File: charset.obj) Version: 1:0 07/04/2015 20:46:18
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: $$$org00000000                      C:0200      C:03B5      1b6h
-    Segment: $$$org00000001                      C:1000      C:103F       40h
-    Segment: $$$org00000002                      C:1100      C:113F       40h
-    Segment: $$$org00000003                      C:1200      C:123F       40h
-    Segment: $$$org00000004                      C:1300      C:133F       40h
-    Segment: $$$org00000005                      C:1400      C:143F       40h
-    Segment: $$$org00000006                      C:1500      C:153F       40h
-    Segment: $$$org00000007                      C:1600      C:163F       40h
-    Segment: $$$org00000008                      C:1700      C:173F       40h
+    Segment: $$$org00000000                      C:1000      C:103F       40h
+    Segment: $$$org00000001                      C:1100      C:113F       40h
+    Segment: $$$org00000002                      C:1200      C:123F       40h
+    Segment: $$$org00000003                      C:1300      C:133F       40h
+    Segment: $$$org00000004                      C:1400      C:143F       40h
+    Segment: $$$org00000005                      C:1500      C:153F       40h
+    Segment: $$$org00000006                      C:1600      C:163F       40h
+    Segment: $$$org00000007                      C:1700      C:173F       40h
+
+
+Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm (File: monovideo4.obj) Version: 1:0 07/04/2015 21:19:19
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: $$$org00000000                      C:0200      C:03B4      1b5h
     Segment: __VECTORS_002                       C:0002      C:0003        2h
     Segment: __VECTORS_00C                       C:000C      C:000D        2h
 
@@ -99,8 +105,9 @@ _READ_NVDS                          00001000 (User Defined)
 _READ_NVDS_GET_STATUS               00001000 (User Defined)
 _WRITE_NVDS                         000010B3 (User Defined)
 _WRITE_NVDS_GET_STATUS              000010B3 (User Defined)
+charSet                               C:1000 charset         $$$org00000000                  
 
-8 external symbol(s).
+9 external symbol(s).
 
 SYMBOL CROSS REFERENCE:
 =======================
@@ -114,11 +121,13 @@ _READ_NVDS                        Defined     LINKER
 _READ_NVDS_GET_STATUS             Defined     LINKER
 _WRITE_NVDS                       Defined     LINKER
 _WRITE_NVDS_GET_STATUS            Defined     LINKER
+charSet                           Defined     C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\charset.asm
+                                  Referenced  C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
 
 OUTPUT CHECKSUM
 ===============
-monovideo3.hex       CDC3
-monovideo3.lod       CDC3
+monovideo3.hex       CD44
+monovideo3.lod       CD44
 
 
 

@@ -25,5 +25,6 @@ define _READ_NVDS_GET_STATUS=$1000
 define _WRITE_NVDS_GET_STATUS=$10B3
 
 "C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\Debug\monovideo3"= \
- .\monovideo4.obj
+ .\monovideo4.obj, \
+ .\charset.obj
 

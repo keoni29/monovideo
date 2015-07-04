@@ -55,6 +55,8 @@ clean:
             $(RM) $(WORKDIR)\monovideo3.map
 	@if exist $(WORKDIR)\monovideo4.obj  \
             $(RM) $(WORKDIR)\monovideo4.obj
+	@if exist $(WORKDIR)\charset.obj  \
+            $(RM) $(WORKDIR)\charset.obj
 
 # pre-4.11.0 compatibility
 rebuildall: buildall 
@@ -62,7 +64,8 @@ rebuildall: buildall
 LIBS = 
 
 OBJS =  \
-            $(WORKDIR)\monovideo4.obj
+            $(WORKDIR)\monovideo4.obj  \
+            $(WORKDIR)\charset.obj
 
 monovideo3: $(OBJS)
 	 $(LD) $(LDFLAGS)
@@ -70,6 +73,11 @@ monovideo3: $(OBJS)
 $(WORKDIR)\monovideo4.obj :  \
             C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm  \
             $(INCLUDE)\zilog\ez8dev.inc  \
-            $(INCLUDE)\zilog\ez8.inc
+            $(INCLUDE)\zilog\ez8.inc  \
+            C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.inc
 	 $(AS) $(ASFLAGS) C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm
+
+$(WORKDIR)\charset.obj :  \
+            C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\charset.asm
+	 $(AS) $(ASFLAGS) C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\charset.asm
 

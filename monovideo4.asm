@@ -27,6 +27,10 @@ init		di									; Disable interrupts
 			ld		R6,#2
 			call	clrBuff						; Clear display buffer
 			
+			ld		R2,#HIGH(testScreen)
+			ld		R3,#LOW(testScreen)
+			call	puts
+			
 initSpi		ldx		PCADDR,#DDR					; MOSI pin is output
 			ldx		PCCTL,#~(1<<4)
 			ldx		PCADDR,#AF					; Set alternate SPI functions
@@ -48,7 +52,8 @@ initSpi		ldx		PCADDR,#DDR					; MOSI pin is output
 			ldx		T1CTL0,#0					; No cascading
 			ldx		T1RH,#HIGH(t1hSync)			; Set T1 interval for short sync pulse
 			ldx		T1RL,#LOW(t1hSync)
-			ldx		T1CTL1,#(1<<6)				; One-shot mode. Sync is inactive (HIGH)
+			ldx		T1CTL1,#(1<<6) | (1 << 4)	; One-shot mode. Sync is inactive (HIGH)
+												; pre=f/4
 
 initGPIO	ldx		PCADDR,#AF					; T1OUT alternate function enable
 			orx		PCCTL,#(1<<1)			
@@ -66,6 +71,18 @@ startVideo	ld		R4,#EFh
 			
 $$			; Do stuff
 			jr		$B
+
+puts		ld		R0,#HIGH(screenBuff)
+			ld		R1,#LOW(screenBuff)
+$$			ldc		R4,@RR2
+			cp		R4,#0
+			jr		z,putsEnd
+			sub		R4,#32						; Subtract ascii offset
+			ldx		@RR0,R4
+			incw	RR0
+			incw	RR2
+			jr		$B
+putsEnd		ret
 
 clrBuff		ld		R0,#HIGH(screenBuff)
 			ld		R1,#LOW(screenBuff)
@@ -108,6 +125,7 @@ doVSync		andx	T1CTL1,#~(1<<6)				; Sync active (LOW)
 			orx		T1CTL1,#(1<<7)				; Start sync pulse timer
 			orx		T1CTL1,#(1<<6)
 			ld		isrVectL,state
+			ld		hCharCnt,#hCharsTotal/2 - 1
 			iret
 
 frontPorch	ld		isrVectL,#LOW(frontBor1)
@@ -124,6 +142,7 @@ frontBor3	ld		isrVectL,#LOW(frontBor4)
 			iret
 frontBor4	ld		isrVectL,state
 			ld		vBuffL,#FFh
+			ld		hCharCnt,#hChars
 			iret
 			
 ; Pre-equalizing pulses
@@ -131,23 +150,23 @@ preEq		djnz	hCharCnt,preEqEnd
 			djnz	vLineCnt,$F
 			ld		state,#LOW(vertPad)			; Set state to vertical padding
 			ld		vLineCnt,R5
-			ld		hCharCnt,#hChars
+			;ld		hCharCnt,#hChars
 			ld		isrVectL,#LOW(sync)
 			iret
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
+$$			;ld		hCharCnt,#hCharsTotal/2 - 1
 			ld		isrVectL,#LOW(doVSync)
 preEqEnd	iret
 
 ; Vertical padding
 vertPad		djnz	hCharCnt,vertPadEnd
-			ld		hCharCnt,#hChars
+			;ld		hCharCnt,#hChars
 			ld		isrVectL,#LOW(sync)
 			djnz	vLineCnt,$F
 			ld		state,#LOW(fetch)			; Set state to visible display
 			ld		vLineCnt,R4
 			iret
-$$			ld		R2,#HIGH(screenBuff + hChars); Return to first character
-			ld		R3,#LOW(screenBuff + hChars)
+$$			ld		R2,#HIGH(screenBuff + hChars + hChars - 2); Return to first character
+			ld		R3,#LOW(screenBuff + hChars + hChars - 2)
 vertPadEnd	iret
 
 
@@ -155,7 +174,6 @@ vertPadEnd	iret
 ; Visible display
 fetch		ldx		SPIDATA,vBuffL
 			djnz	hCharCnt,fetchTile			; End of line?
-			ld		hCharCnt,#hChars
 			ld		isrVectL,#LOW(sync)
 			djnz	vLineCnt,$F					; 
 			ld		state,#LOW(vertPad2)		; Set state to vertical padding
@@ -173,13 +191,13 @@ fetchTile	ldx		R1,@RR2						; Get character from display buffer
 			
 ; Vertical padding bottom
 vertPad2	djnz	hCharCnt,vertPad2End
-			ld		isrVectL,#LOW(doVSync)
+			ld		isrVectL,#LOW(sync)
 			djnz	vLineCnt,$F
 			ld		state,#LOW(postEq)			; Set state to postEq
 			ld		vLineCnt,#vSyncHLines
-			ld		hCharCnt,#hCharsTotal/2 - 1
+			;ld		hCharCnt,#hCharsTotal/2 - 1
 			iret
-$$			ld		hCharCnt,#hChars
+$$			;ld		hCharCnt,#hChars
 vertPad2End	iret
 
 ; Post-equalizing pulses
@@ -189,7 +207,7 @@ postEq		djnz	hCharCnt,postEqEnd
 			ld		vLineCnt,#vSyncHLines
 			ldx		T1RH,#HIGH(t1BroadSync)		; Set T1 interval for broad sync pulse
 			ldx		T1RL,#LOW(t1BroadSync)
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
+$$			;ld		hCharCnt,#hCharsTotal/2 - 1
 			ld		isrVectL,#LOW(doVSync)
 postEqEnd	iret
 ; Broad sync pulses
@@ -197,9 +215,8 @@ vSync		djnz	hCharCnt,vSyncEnd
 			djnz	vLineCnt,$F
 			ld		state,#LOW(preEq)			; Set state to preEq
 			ld		vLineCnt,#vSyncHLines + vSyncPad
-			ldx		T1RH,#HIGH(t1hSync)			; Set T1 interval for short sync pulse
-			ldx		T1RL,#LOW(t1hSync)
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
+			ldx		T1RL,#LOW(t1hSync)			; Set T1 interval for short sync pulse
+$$			;ld		hCharCnt,#hCharsTotal/2 - 1
 			ld		isrVectL,#LOW(doVSync)
 vSyncEnd	iret
 
@@ -209,3 +226,6 @@ if vSync - sync > 200
 endif											; Therefore Vsync - sync <= 255
 			
 xref charSet
+
+testScreen
+	asciz	"0000:00 01 02 03 04 05 06 07"

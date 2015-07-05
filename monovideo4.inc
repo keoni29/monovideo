@@ -28,9 +28,9 @@
 
 		t0Interval		var		hTime * sysFreq / (hCharsTotal * 1000_000)
 		t1hSync			var		(hSyncTime * sysFreq / 1000_000)
-		;t1hSync			var		t1hSync / 4
 		t1BroadSync		var		((t0Interval * (hCharsTotal / 2)) - t1hSync)
-		;t1BroadSync		var		t1BroadSync / 4
+		t1BroadSync		var		t1BroadSync / 4
+		t1hSync			var		t1hSync / 4
 
 		;if t0Interval < (cWidth + 1) * spiPre * 2
 		if hCharsTotal > (hTime * 25) / ((cWidth + 1) * spiPre * 2)
@@ -38,11 +38,11 @@
 		endif
 		
 		if t1hSync > 255
-		;	error "t1hSync:System clock frequency too low. Timing requirements not met!"
+			error "t1hSync:System clock frequency too low. Timing requirements not met!"
 		endif
 		
 		if t1BroadSync > 255
-		;	error "t1BroadSync:System clock frequency too low. Timing requirements not met!"
+			error "t1BroadSync:System clock frequency too low. Timing requirements not met!"
 		endif
 		
 ;Register labels (R4-R8 are free to use)

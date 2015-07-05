@@ -203,6 +203,12 @@
 <watch-elements>
 <watch-element expression="charSet" />
 <watch-element expression="t0Interval" />
+<watch-element expression="hCharsTotal" />
+<watch-element expression="rightChars" />
+<watch-element expression="leftChars" />
+<watch-element expression="hChars" />
+<watch-element expression="t1BroadSync" />
+<watch-element expression="t1hSync" />
 </watch-elements>
 
 <!-- breakpoint information -->

@@ -1,5 +1,7 @@
 ; Calculate timing parameters
-		hCharsTotal equ	hChars + 1;3 ;+ hBorderL + hBorderR
+		leftChars	equ	2
+		rightChars	equ 1
+		hCharsTotal equ	hChars + leftChars + rightChars
 		if (hCharsTotal / 2) * 2 < hCharsTotal
 			error "Horizontal characters must be an even number."
 		endif
@@ -11,13 +13,15 @@
 			fPorchTime	equ		2
 			vSyncHLines	equ		5
 			vSyncPad	equ		1;1
+			vLines		equ		288
 		elseif rFreq = 60
 			hTime		equ		63
 			hSyncTime	equ		4
 			bPorchTime	equ		4
 			fPorchTime	equ		2
 			vSyncHLines	equ		6
-			vSyncPad	equ	0
+			vSyncPad	equ		240
+			vLines		equ		
 		else
 			error	"Unknown frequency"
 		endif

@@ -6,7 +6,7 @@ include "ez8.inc"
 		sysFreq		equ		25_000_000;20_000_000 
 		rFreq		equ		50
 
-		hChars		equ		43			; Character columns
+		hChars		equ		23			; Character columns
 		vChars		equ		30			; Character rows
 		hBorderL	equ		2			; Left horizontal border width
 		hBorderR	equ		2			; Right horizontal border width
@@ -55,8 +55,9 @@ initGPIO	ldx		PCADDR,#AF					; T1OUT alternate function enable
 			
 startVideo	ld		R4,#EEh
 			ld		R5,#19h
+			ld		R6,#19h
 			ld		state,#LOW(preEq)			; Set state to preEq
-			ld		hCharCnt,#hCharsTotal/2 - 1
+			ld		hCharCnt,#hCharsTotal/2 - leftChars
 			ld		vLineCnt,#vSyncHLines + vSyncPad
 			ld		isrVectH,#HIGH(sync)
 			ld		isrVectL,#LOW(sync)
@@ -80,10 +81,17 @@ $$			ld		R2,R1
 isrT0		jp		@isrVect
 
 align 256
-sync		andx	T1CTL1,#~(1<<6)				; Sync active (LOW)
+sync
+backPorch	ld		isrVectL,#LOW(hSync)
+			iret
+			
+hSync		andx	T1CTL1,#~(1<<6)				; Sync active (LOW)
 			orx		T1CTL1,#(1<<7)				; Start sync pulse timer
 			orx		T1CTL1,#(1<<6)
-			ld		isrVectL,state
+			ld		isrVectL,#LOW(frontPorch)
+			iret
+
+frontPorch	ld		isrVectL,state
 			ld		vBuffL,#FFh					; Load black pixels in video buffer
 			iret
 ; Pre-equalizing pulses
@@ -94,61 +102,67 @@ preEq		djnz	hCharCnt,preEqEnd
 			ld		hCharCnt,#hChars
 			ld		isrVectL,#LOW(sync)
 			iret
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
+$$			ld		hCharCnt,#hCharsTotal/2 - leftChars
 			ld		isrVectL,#LOW(sync)
 preEqEnd	iret
 
 ; Vertical padding
-vertPad		djnz	hCharCnt,vertPadEnd
+vertPad		ldx		SPIDATA,#FFh
+			djnz	hCharCnt,vertPadEnd
+			ld		isrVectL,#LOW(sync)
 			djnz	vLineCnt,$F
 			ld		state,#LOW(fetch)			; Set state to visible display
 			ld		vLineCnt,R4
 			ld		hCharCnt,#hChars
-			ld		isrVectL,#LOW(sync)
 			ld		R2,#HIGH(screenBuff)		; Return to first character
 			ld		R3,#LOW(screenBuff)
+			ld		R0,#7
 			iret
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
-			ld		isrVectL,#LOW(sync)
+$$			ld		hCharCnt,#hChars
 vertPadEnd	iret
+
+
 
 ; Visible display
 fetch		ldx		SPIDATA,vBuffL
 			djnz	hCharCnt,fetchTile			; End of line?
 			sub		R3,#hChars					; Yes: Jump back to start of line
 			sbc		R2,#0
-			djnz	vLineCnt,$F					; 
-			ld		state,#LOW(vertPad2)		; Set state to vertical padding
-			ld		vLineCnt,R5
 			ld		hCharCnt,#hChars
 			ld		isrVectL,#LOW(sync)
+			djnz	vLineCnt,$F					; 
+			ld		state,#LOW(vertPad2)		; Set state to vertical padding
+			ld		vLineCnt,R6
 			iret
 $$			ld		R0,vLineCnt
 			and		R0,#07h
-			jr		ne,$F						; 16 lines done?
+			jr		ne,$F						; 8 lines done?
 			add		R3,#hChars					; Yes: Jump to start of next line
 			adc		R2,#0
-$$			ld		hCharCnt,#hChars
-			ld		isrVectL,#LOW(sync)
+$$
 fetchTile	ld		R0,vLineCnt
 			and		R0,#07h						; Select row of pixels in character
 			or		R0,#HIGH(charSet)			; 
 			ldx		R1,@RR2						; Get character from display buffer
 			incw	RR2							; Advance to next character
-			ldc		vBuffL,@RR0					; Load pixels in video buffer
+			;ldc		vBuffL,@RR0					; Load pixels in video buffer
 			;ld		vBuffL,vLineCnt
+			ld		vBuffL,#00h					; Load white pixels
 			iret
+
+
+			
 			
 ; Vertical padding bottom
-vertPad2	djnz	hCharCnt,vertPad2End
+vertPad2	ldx		SPIDATA,#FFh
+			djnz	hCharCnt,vertPad2End
+			ld		isrVectL,#LOW(sync)
 			djnz	vLineCnt,$F
 			ld		state,#LOW(postEq)			; Set state to postEq
 			ld		vLineCnt,#vSyncHLines
-			ld		hCharCnt,#hCharsTotal/2 - 1
-			ld		isrVectL,#LOW(sync)
+			ld		hCharCnt,#hCharsTotal/2 - leftChars
 			iret
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
-			ld		isrVectL,#LOW(sync)
+$$			ld		hCharCnt,#hChars
 vertPad2End	iret
 
 ; Post-equalizing pulses
@@ -158,7 +172,7 @@ postEq		djnz	hCharCnt,postEqEnd
 			ld		vLineCnt,#vSyncHLines
 			ldx		T1RH,#HIGH(t1BroadSync)		; Set T1 interval for broad sync pulse
 			ldx		T1RL,#LOW(t1BroadSync)
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
+$$			ld		hCharCnt,#hCharsTotal/2 - leftChars
 			ld		isrVectL,#LOW(sync)
 postEqEnd	iret
 ; Broad sync pulses
@@ -168,7 +182,7 @@ vSync		djnz	hCharCnt,vSyncEnd
 			ld		vLineCnt,#vSyncHLines + vSyncPad
 			ldx		T1RH,#HIGH(t1hSync)			; Set T1 interval for short sync pulse
 			ldx		T1RL,#LOW(t1hSync)
-$$			ld		hCharCnt,#hCharsTotal/2 - 1
+$$			ld		hCharCnt,#hCharsTotal/2 - leftChars
 			ld		isrVectL,#LOW(sync)
 vSyncEnd	iret
 

@@ -6,7 +6,7 @@ include "ez8.inc"
 		sysFreq		equ		25_000_000;20_000_000 
 		rFreq		equ		50
 
-		hChars		equ		20			; Character columns
+		hChars		equ		28	;28 stable		; Character columns
 		vChars		equ		30			; Character rows
 		hBorderL	equ		2			; Left horizontal border width
 		hBorderR	equ		2			; Right horizontal border width
@@ -88,11 +88,15 @@ backPorch	ld		isrVectL,#LOW(backBor1)
 			ld		R0,vLineCnt
 			and		R0,#07h
 			jr		ne,$F						; 8 lines done?
-			add		R3,#hChars					; Yes: Jump to start of next line
+			add		R3,#hChars - 1					; Yes: Jump to start of next line
 			adc		R2,#0
 $$			iret
 
 backBor1	ld		isrVectL,#LOW(hSync)
+			incw	RR2							; Advance to next character
+			ld		R0,vLineCnt
+			and		R0,#07h						; Select row of pixels in character
+			or		R0,#HIGH(charSet)			; 
 			iret
 			
 hSync		andx	T1CTL1,#~(1<<6)				; Sync active (LOW)
@@ -156,17 +160,12 @@ fetch		ldx		SPIDATA,vBuffL
 			djnz	vLineCnt,$F					; 
 			ld		state,#LOW(vertPad2)		; Set state to vertical padding
 			ld		vLineCnt,R6
-			iret
-fetchTile	ld		R0,vLineCnt
-			and		R0,#07h						; Select row of pixels in character
-			or		R0,#HIGH(charSet)			; 
-			ldx		R1,@RR2						; Get character from display buffer
+$$			iret
+fetchTile	ldx		R1,@RR2						; Get character from display buffer
 			incw	RR2							; Advance to next character
 			ldc		vBuffL,@RR0					; Load pixels in video buffer
 			;ld		vBuffL,vLineCnt
 			;ld		vBuffL,#00h					; Load white pixels
-			iret
-$$			incw	RR2							; Advance to next character
 			iret
 
 

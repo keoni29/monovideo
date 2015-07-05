@@ -4,7 +4,7 @@ Copyright (C) 1999-2008 Zilog, Inc. All Rights Reserved
 
 LINK MAP:
 
-DATE:      Sun Jul 05 23:12:16 2015
+DATE:      Sun Jul 05 23:24:48 2015
 PROCESSOR: assembler
 FILES:     .\monovideo4.obj
            .\charset.obj          
@@ -84,11 +84,11 @@ Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\charset.asm (File: charset.obj) 
     Segment: $$$org00000007                      C:1700      C:173F       40h
 
 
-Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm (File: monovideo4.obj) Version: 1:0 07/05/2015 23:12:16
+Module: C:\users\koen\MY_D~D41\src\ez8\MONO~MM3\monovideo4.asm (File: monovideo4.obj) Version: 1:0 07/05/2015 23:24:48
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: $$$org00000000                      C:0200      C:03D7      1d8h
+    Segment: $$$org00000000                      C:0200      C:03D6      1d7h
     Segment: __VECTORS_002                       C:0002      C:0003        2h
     Segment: __VECTORS_00C                       C:000C      C:000D        2h
 
@@ -126,8 +126,8 @@ charSet                           Defined     C:\users\koen\MY_D~D41\src\ez8\MON
 
 OUTPUT CHECKSUM
 ===============
-monovideo3.hex       E5DF
-monovideo3.lod       E5DF
+monovideo3.hex       E514
+monovideo3.lod       E514
 
 
 
